@@ -11,8 +11,16 @@ We would like to develop an AI player for the puzzle game 2048 using reinforceme
 
 ## Proposed Objectives
 - Develop an AI player that can successfully play the game 2048 to reach a maximum value tile of 2048 without losing the game.
+- Alter the game of 2048 to have a powerup.
+- Be able to evalute the worth of a given game state with the use of the added powerup.
 - Implement reinforcement learning algorithms to train the AI player.
 - Evaluate the performance of the AI player and compare its performance to its preceding iteration players.
+
+## Possible Powerups
+(Looking for feedback on which powerup would be the best fit)
+- Negative tiles: these would be additional tiles that are negative, comnibining them with positive tiles would result in an empty space and combing them with other negative tiles will result in a larger negative tile. For example -2 and 2 would cancel and make an empty space and -2 and -2 would combine to a -4 tile.
+- Random additon: This ability would be a button that adds a tile of random worth from the current tiles on the board. for example if the maximum tile on the board is 256 then tiles from 2 to 256 can be added. This powerup could be on cooldown or have a finite number of uses.
+- Clear row/column: A button that would clear a select row or column of all its tiles with a finite amount of uses.
 
 ## Proposed Methods from Artificial Intelligence
 AI example:
