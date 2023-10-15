@@ -1,18 +1,18 @@
-# Proposal for AI Project: AI Player for 2048 using Reinforcement Learning
+# Proposal for AI Project: 
 
-- Title: 2048 Player using Reinforcement Learning
+## AI Player for 2048 using Reinforcement Learning
+
 - COMP 3106 A 
-- Group Members:
-  - Carlo Flores - 101156348
-  - Michael Macdougall - 101197828
+- Carlo Flores - 101156348
+- Michael Macdougall - 101197828
 
 ## Introduction and Background
-We would like to develop an AI player for the puzzle game 2048 using reinforcement learning techniques. 2048 is a puzzle game that involves shifting merging two pieces of equal value to reach a highest score, while mitigating the amount of space taken up in the grid by all of the tiles. It is a popular puzzle game for humans while remaining relatively simple in principle.
+We would like to develop an AI player for the puzzle game 2048 using reinforcement learning techniques. 2048 is a puzzle game that involves shifting merging two pieces of equal value to reach a highest score, while mitigating the amount of space taken up in the grid by all of the tiles. It is a popular puzzle game while remaining relatively simple in principle.
 
 ## Proposed Objectives
 - Develop an AI player that can successfully play the game 2048 to reach a maximum value tile of 2048 without losing the game.
 - Implement reinforcement learning algorithms to train the AI player.
-- Evaluate the performance of the AI player and compare its performance to its preceding trained players.
+- Evaluate the performance of the AI player and compare its performance to its preceding iteration players.
 
 ## Proposed Methods from Artificial Intelligence
 AI example:
@@ -22,7 +22,7 @@ AI example:
 For this project, the AI player will only learn based on its own interactions with the 2048 game, so a dataset will not be needed.
 
 ## Proposed Validation/Analysis Strategy
-To validate and analyze the performance of our AI player, we will compare its gameplay with that of its own previous learned player. We can measure things like the average score, number of moves taken, and the number of turns needed to reach certain milestones.
+To validate and analyze the performance of our AI player, we will compare its gameplay with that of its own previous iteration player. We can measure things like the highest score, number of moves moves made before losing, and the number of turns needed to reach certain milestones.
 >continue?
 
 ## Description of Novelty
