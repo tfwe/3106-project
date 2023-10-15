@@ -29,6 +29,8 @@ To validate and analyze the performance of our AI player, we will compare its ga
 AI example:
 >adding a "Swap" power-up? This power-up allows players to swap the positions of any two tiles on the board, helping them strategically rearrange the tiles to create better combinations and reach higher numbers. However, players would have a limited number of swaps available, adding a strategic element to the game.
 
+list of possible novelty options
+
 ## Weekly Schedule and Milestones
 AI example
 >- Week 1: Familiarize ourselves with the game 2048 and its rules.
@@ -38,4 +40,13 @@ AI example
 >- Week 5: Investigate the use of deep reinforcement learning techniques to enhance the AI player's performance.
 >- Week 6: Conduct experiments and analyze the results.
 >- Week 7: Finalize the project and prepare for presentation.
+
+## Projection Demonstration Time Slots
+Carlo and I would prefer to do our demonstration in person and at any of these times:
+>- Tuesday 12:00, 1:00
+>- Thursday 12:00, 1:00
+>- Friday 12:00, 1,00
+
+## Gpu Requirements
+> Since we're using deep learning a GPU would help train different iterations of our program simultaneously and so we would like access to a GPU in order to accelerate the training process.
 
