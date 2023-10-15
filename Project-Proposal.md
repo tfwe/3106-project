@@ -30,8 +30,7 @@ AI example:
 For this project, the AI player will only learn based on its own interactions with the 2048 game, so a dataset will not be needed.
 
 ## Proposed Validation/Analysis Strategy
-To validate and analyze the performance of our AI player, we will compare its gameplay with that of its own previous iteration player. We can measure things like the highest score, number of moves moves made before losing, and the number of turns needed to reach certain milestones.
->continue?
+To validate and analyze the performance of our AI player, we will compare its gameplay with that of its own previous iteration player. We can measure things like the highest score, number of moves moves made before losing, and the number of turns needed to reach certain milestones. We can also look at how our AI player values each possible move in the current game state. The AI should select a value for each possible move it can make and choose the most efficient method whether that's using an availible powerup or just using the regular game mechanics to get to the next best possible state it can.
 
 ## Description of Novelty
 AI example:
