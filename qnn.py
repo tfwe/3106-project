@@ -164,6 +164,7 @@ def main():
                 update_q_net(replay_memory, batch_size, Transition, optimizer)
                 if total_steps % target_update == 0:
                     update_target_net()
+            print(board)
 
 if __name__ == "__main__":
    main() 
