@@ -9,12 +9,16 @@ class Board(object):
             self.size = size
             self.game_over = False
             self.turn = 0
+            self.prev_move = None
+            self.prev_board = np.zeros((size,size)).astype(int)
             self.board_array = np.zeros((size,size)).astype(int)
             self.initial_array = np.zeros((size,size)).astype(int)
         else:
             self.size = otherboard.size
             self.game_over = otherboard.game_over
             self.turn = otherboard.turn
+            self.prev_move = otherboard.prev_move
+            self.prev_board = otherboard.prev_board
             self.board_array = np.copy(otherboard.board_array)
             self.initial_array = np.copy(otherboard.initial_array)
     
@@ -38,8 +42,13 @@ class Board(object):
         self.start_game()
 
     def start_game(self):
+        self.initial_array = np.copy(self.board_array)
+        self.prev_board = np.copy(self.board_array)
         self.spawn_pieces()
         self.spawn_pieces()
+        self.game_over = False
+        self.prev_move = None
+        self.turn = 0
 
     def load_array(self, board_array):
         self.board_array = np.copy(board_array)
@@ -48,7 +57,7 @@ class Board(object):
         available_moves = self.get_available_moves() # sets game over flag
 
     def spawn_pieces(self):
-        possible_starting_pieces = {2: 0.9, 4: 0.1}  # Modify this dictionary to add more tiles in the future
+        possible_starting_pieces = {-2: 0.1, 2: 0.8, 4: 0.1}  # Modify this dictionary to add more tiles in the future
         open_tiles = self.get_open_tiles()
 
         for _ in range(math.ceil(self.size / 4)):
@@ -71,9 +80,12 @@ class Board(object):
             "right":self.move_right,
             "left":self.move_left
             }
-        if not possible_moves[direction]:
+        result = possible_moves[direction]()
+        if not result:
             return False
-        return possible_moves[direction]()
+        self.prev_board = np.copy(self.board_array)
+        self.prev_move = direction
+        return result
 
     def move_up(self):
         x = 0
@@ -93,8 +105,8 @@ class Board(object):
                         self.board_array[y][x] = 0
                         y -= 1
                         board_changed = True
-                    elif self.board_array[y - 1][x] == self.board_array[y][x] and merge_allowed[x]:
-                        self.board_array[y - 1][x] *= 2
+                    elif math.fabs(self.board_array[y - 1][x]) == math.fabs(self.board_array[y][x]) and merge_allowed[x]:
+                        self.board_array[y - 1][x] += self.board_array[y][x]
                         self.board_array[y][x] = 0
                         merge_allowed[x] = False
                         y -= 1
@@ -159,11 +171,13 @@ class Board(object):
         return False
 
 def main():
-    board = Board(4)
-    board.start_game()
-    while not board.is_game_over():
-        print(board)
-        board.random_move()
+    board = Board(3)
+    board.load_array(np.array([[-2,0,0],[2,0,0],[0,0,0]]))
+    # while not board.is_game_over():
+        # print(board)
+        # board.random_move()
+    print(board)
+    board.move('up')
     print(board)
 if __name__ == "__main__":
     main()
