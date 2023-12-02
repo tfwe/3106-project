@@ -24,9 +24,9 @@ class DQN(nn.Module):
         x = self.fc3(x)  # No activation
         return x
 
-def select_action(board, epsilon):
+def select_action(board):
     # if np.random.rand() < epsilon:
-    action = np.random.choice(board.get_available_moves())
+    #     action = np.random.choice(board.get_available_moves())
     # else:
     #     # Calculate Q-values for each action
     #     q_values = calculate_q_values(state)
@@ -34,7 +34,7 @@ def select_action(board, epsilon):
     #     action = np.argmax(q_values)
     return action
 
-def update_q_net():
+def update_q_net(replay_memory, batch_size, Transition, optimizer):
     # Sample a mini-batch from the replay memory
     transitions = random.sample(replay_memory, batch_size)
     batch = Transition(*zip(*transitions))
@@ -150,17 +150,20 @@ def main():
     for episode in range(2):  
         running_loss = 0.0
         while not board.is_game_over(): 
-            epsilon = max(epsilon_end, epsilon_decay * episode)
-            action = select_action(state, epsilon)
-            next_state, reward, done,  = env.step(action)
+            # epsilon = max(epsilon_end, epsilon_decay * episode)
+            # action = select_action(state, epsilon)
+            action = np.random.choice(board.get_available_moves())
+            board.move(action)
+            
+            next_state = encode_game_state(board.board_array)
+            reward = calc_reward(board.board_array)
             replay_memory.append(Transition(state, action, next_state, reward))
             state = next_state
+            batch_size = 64
             if len(replay_memory) > batch_size:
-                update_q_net()
+                update_q_net(replay_memory, batch_size, Transition, optimizer)
                 if total_steps % target_update == 0:
                     update_target_net()
-            if done:
-                break
 
 if __name__ == "__main__":
    main() 
