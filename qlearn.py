@@ -9,14 +9,14 @@ class td_qlearning:
   qvalues = {} # Q function is represented as a dictionary (key: (state, action), value: q value)
   
   def __init__(self, board):
-    num_iter = 1 # needs a lot of iterations to fully converge
+    num_iter = 1000 # needs a lot of iterations to fully converge
     for _ in range(num_iter):
       # Perform temporal reinforcement learning algorithm on the trial data
-      board.start_game()
-      while not board.is_game_over():
-        curr_state = np.array2string(encode_board_state(board.board_array)) 
-        print(curr_state)
-        possible_actions = board.get_available_moves()
+      sim_board = game.Board(otherboard=board)
+      sim_board.start_game()
+      while not sim_board.is_game_over():
+        curr_state = encode_board_state(sim_board.board_array) 
+        possible_actions = sim_board.get_available_moves()
         for action in possible_actions: 
           self.qvalue(curr_state, action)
         # can't get previous state when at the first iteration
@@ -24,20 +24,21 @@ class td_qlearning:
         #   optimal_move = self.policy(curr_state)
         #   board.move(optimal_move)
         #   continue
-        prev_state = np.array2string(encode_board_state(board.prev_board))
-        prev_action = board.prev_move
+        prev_state = encode_board_state(sim_board.prev_board)
+        prev_action = sim_board.prev_move
 
         q = self.qvalue(prev_state, prev_action)
-        sorted_actions = self.policy(curr_state, possible_actions)
-        if len(sorted_actions) == 0:
+        # if len(sorted_actions) == 0:
+          # break
+        state_policy = self.policy(curr_state)
+        if state_policy == None:
           break
-        max_action = sorted_actions[0]
-        error_term = calc_reward(board.prev_board) + self.gamma * self.qvalues[curr_state][max_action] - q
+        optimal_move = max(state_policy, key=state_policy.get)
+
+        error_term = calc_reward(board.prev_board) + self.gamma * self.qvalue(curr_state, optimal_move) - q
         self.qvalues[prev_state][prev_action] = q + self.alpha * error_term
 
-        optimal_move = self.policy(curr_state, possible_actions)
-        board.move(optimal_move)
-        print(board)
+        sim_board.move(optimal_move)
       # directory is the path to a directory containing trials through state space
       # Return nothing
 
@@ -52,18 +53,17 @@ class td_qlearning:
       self.qvalues[state][action] = calc_reward(state)
     q = self.qvalues[state][action]
     return q
-  
+
+  def policy(self, state):
+    # state is a string representation of a state
+    state_policy = self.qvalues.get(state)
+
   def get_qvalues(self):
     return self.qvalues 
   
-  def policy(self, state, possible_actions):
-    # state is a string representation of a state
-    a = max(self.qvalues[state], key=self.qvalues[state].get)
-    filtered_a = [move for move in a if move in possible_actions]
-    return filtered_a
 
 def calc_reward(board_array):
-  # values_sum          = np.sum(board_array)
+  values_sum          = np.sum(np.ravel(board_array))
   num_open_tiles      = np.count_nonzero(board_array == 0)
   # edge_bonus          = calc_edge_bonus(board_array)
   # corner_bonus        = calc_corner_bonus(board_array)
@@ -73,7 +73,7 @@ def calc_reward(board_array):
   # num_merges          = count_available_merges(board_array)
   score = 0
   # score += values_sum 
-  score += num_open_tiles 
+  # score += num_open_tiles 
   # score += uniqueness_bonus 
   # score += corner_bonus 
   # score += edge_bonus
@@ -119,7 +119,7 @@ def encode_board_state(board_array):
 
       encoded_arr.append(log2_tile)
     
-    return np.array(encoded_arr)
+    return np.array(encoded_arr).reshape(3,3)
 def decode_game_state(state):
   # convert each hexadecimal digit to an integer
   int_state = [int(digit, 16) for digit in state]
@@ -135,12 +135,31 @@ def decode_game_state(state):
 def main():
   board = game.Board(size=3)
   qlearn = td_qlearning(board)
-  print(qlearn.qvalues)
-  board_array = np.array([[-4, -2, 0], [2, 4, 8], [16, 32, 64], [128, 256, 512]])
-  encoded_game_state = encode_board_state(board_array)
-  print(encoded_game_state)
+  board.start_game()
+  while not board.is_game_over():
+    optimal_move = qlearn.policy(np.array2string(board.board_array))
+    if optimal_move == None:
+      if not board.is_game_over():
+        board.random_move()
+      continue
+    print(optimal_move)
+    board.move(optimal_move)
+    print(board)
+  print(board)
+  
+  # board_array = np.array([[-4, -2, 0], [2, 4, 8], [16, 32, 64], [128, 256, 512]])
+  # encoded_game_state = encode_board_state(board_array)
+  # print(encoded_game_state)
   # decoded_game_state = decode_game_state(encoded_game_state)
   # print(decoded_game_state)
 
 if __name__ == "__main__":
   main()
+
+def main():
+  board = game.Board(size=3)
+  board.start_game()
+  while not board.is_game_over():
+    board.random_move()
+    print(board)
+  print(board)

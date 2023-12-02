@@ -1,6 +1,8 @@
 import numpy as np
 import random
 import math
+from colorama import Fore, Style, Back
+
 class Board(object):
     def __init__(self, size=4, otherboard=None):
         if otherboard is None:
@@ -29,14 +31,42 @@ class Board(object):
         board_str = ""
         
         def prettify_tile(value, length=4):
-            return f'{str(value).center(length)}'
+            if value == 0:
+                return f'{Style.RESET_ALL}{Back.LIGHTWHITE_EX}{str("").center(length)}'
+                # return f'{Back.LIGHTBLACK_EX} {str(value).ljust(4)}'
+            elif value == 2:
+                return f'{Fore.LIGHTBLACK_EX}{Back.WHITE}{str(value).center(length)}' 
+            elif value == 4:
+                return f'{Fore.LIGHTBLACK_EX}{Back.WHITE}{str(value).center(length)}' 
+            elif value == 8:
+                return f'{Style.RESET_ALL}{Back.LIGHTRED_EX}{str(value).center(length)}' 
+            elif value == 16:
+                return f'{Style.RESET_ALL}{Back.LIGHTRED_EX}{str(value).center(length)}' 
+            elif value == 32:
+                return f'{Style.RESET_ALL}{Back.RED}{str(value).center(length)}'
+            elif value == 64:
+                return f'{Style.RESET_ALL}{Back.RED}{str(value).center(length)}'
+            elif value == 128:
+                return f'{Style.RESET_ALL}{Back.YELLOW}{str(value).center(length)}'
+            elif value == 256:
+                return f'{Style.RESET_ALL}{Back.YELLOW}{str(value).center(length)}'
+            elif value == 512:
+                return f'{Style.RESET_ALL}{Back.YELLOW}{str(value).center(length)}'
+            elif value == 1024:
+                return f'{Style.RESET_ALL}{Back.YELLOW}{str(value).center(length)}'
+            elif value == 2048:
+                return f'{Style.RESET_ALL}{Fore.LIGHTBLACK_EX}{Back.LIGHTYELLOW_EX}{str(value).center(length)}'
+            else:
+                return f'{Style.RESET_ALL}{Back.BLACK}{str(value).center(length)}'
         
         for i in range(self.size):
             for j in range(self.size):
+                board_str += Style.RESET_ALL
                 board_str += prettify_tile(self.board_array[i][j]) 
+                board_str += Style.RESET_ALL 
             board_str += '\n'
         
-        return board_str
+        return board_str    
     def reset(self):
         self = Board(self.size)
         self.start_game()
@@ -57,7 +87,7 @@ class Board(object):
         available_moves = self.get_available_moves() # sets game over flag
 
     def spawn_pieces(self):
-        possible_starting_pieces = {-2: 0.1, 2: 0.8, 4: 0.1}  # Modify this dictionary to add more tiles in the future
+        possible_starting_pieces = {-2: 0.3, 2: 0.6, 4: 0.1}  # Modify this dictionary to add more tiles in the future
         open_tiles = self.get_open_tiles()
 
         for _ in range(math.ceil(self.size / 4)):
@@ -153,7 +183,7 @@ class Board(object):
             if sim_board.move(i):
                 available_moves.append(i)
                 sim_board = Board(-1, self)
-        return available_moves
+        return np.array(available_moves)
    
     def is_game_over(self):
         available_moves = self.get_available_moves()
