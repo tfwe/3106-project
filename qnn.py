@@ -12,20 +12,18 @@ from collections import namedtuple, deque
 class DQN(nn.Module):
     def __init__(self):
         super(DQN, self).__init__()
-        self.conv1 = nn.Conv2d(1, 128, kernel_size=1)
-        self.conv2 = nn.Conv2d(128, 512, kernel_size=1)
-        self.conv3 = nn.Conv2d(512, 512, kernel_size=1)
-        self.fc1 = nn.Linear(512*9, 120)
-        self.fc2 = nn.Linear(120, 84)
-        self.fc3 = nn.Linear(84, 4)  # 4 outputs for up, down, left, right
+        self.conv1 = nn.Conv2d(1, 512, kernel_size=1)
+        self.conv2 = nn.Conv2d(512, 512, kernel_size=1)
+        self.fc1 = nn.Linear(512*9, 512)
+        # self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(512, 4)  # 4 outputs for up, down, left, right
 
     def forward(self, x):
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
-        x = F.relu(self.conv3(x))
         x = x.view(1, 512*9)  # Flatten layer
         x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
+        # x = F.relu(self.fc2(x))
         x = self.fc3(x)  # No activation
         return x
 
@@ -160,27 +158,33 @@ def visualize_data(turns, max_tiles, min_tiles, piece_distributions, plt):
     # Plot histogram of turns
     plt.subplot(2, 2, 1)
     plt.hist(turns)
-    plt.title('Turns taken in each game')
+    plt.title(f'Number of turns taken in each game, mean: {np.mean(turns)}, std: {np.std(turns)}')
 
     # Plot histogram of max tiles
     plt.subplot(2, 2, 2)
     plt.hist(max_tiles, bins=range(0, max(max_tiles)))
-    plt.title('Log(Max tile, 2) value in each game')
+    plt.title(f'Log(Max tile, 2) value in each game, mean: {np.mean(max_tiles)}, std: {np.std(max_tiles)}')
 
     # Plot histogram of min tiles
     plt.subplot(2, 2, 3)
     plt.hist(min_tiles, bins=20)
-    plt.title('Min tile value in each game')
+    plt.title(f'Min tile value in each game')
 
     # Plot bar chart of piece distributions
     plt.subplot(2, 2, 4)
     all_tiles = [tile for dist in piece_distributions for tile in dist]
     all_counts = [count for dist in piece_distributions for count in dist.values()]
     plt.bar(all_counts, all_tiles)
-    plt.title('Tile distributions across all games')
+    plt.title(f'Tile distributions across all games')
 
     # Show the plot
 
+def visualize_loss(loss_array, num_episodes):
+    print(loss_array)
+    plt.figure()
+    plt.plot(np.arange(num_episodes), loss_array)
+    plt.title(f'Running loss during training across {num_episodes}, mean: {np.mean(loss_array)}')
+    plt.show()
 
 
 def main():
@@ -189,6 +193,8 @@ def main():
     batch_size = 1
     gamma = 0.9
     target_update = 100
+    episode_interval = 100
+    num_episodes = 1000
     board = game.Board(size=3)
     board.start_game()
     state = encode_game_state(board.board_array)
@@ -205,14 +211,15 @@ def main():
     q_net.train()
 
     # Define a Loss function and optimizer
-    criterion = nn.MSELoss()
-    optimizer = optim.SGD(q_net.parameters(), lr=0.1, momentum=0.9)
+    criterion = nn.HuberLoss()
+    optimizer = optim.SGD(q_net.parameters(), lr=0.01, momentum=0.9)
 
     # define replay memory
     Transition = namedtuple('Transition', ('state', 'action', 'next_state', 'reward'))
     replay_memory = deque(maxlen=10000)
 
-    for episode in range(1000):  
+    loss_array = []
+    for episode in range(num_episodes):  
         board = game.Board(size=3)
         board.start_game()
         running_loss = 0.0
@@ -227,6 +234,7 @@ def main():
             
             next_state = encode_game_state(board.board_array)
             reward = calc_reward(board.board_array)
+            running_loss += 9 - reward.item()
             replay_memory.append(Transition(state, action, next_state, reward))
             state = next_state
 
@@ -237,8 +245,11 @@ def main():
                     q_net.train()
                     torch.save(q_net.state_dict(), './q_net.pth')
                     torch.save(target_net.state_dict(), './target_net.pth')
-        print(f"episode: {episode}")
-
+        if episode % episode_interval == 0:
+            print(f"episode: {episode}")
+            print(board)
+        loss_array.append(running_loss)
+    visualize_loss(loss_array, num_episodes)
     n = 1000
 
     turns, max_tiles, min_tiles, piece_distributions = sample_random_games(n)
