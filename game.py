@@ -103,13 +103,16 @@ class Board(object):
             x = open_tiles[rand_tile_index][1]
             self.board_array[y][x] = rand_piece
 
-    def move(self, direction):
+    def move(self, direction=None, index=0):
         possible_moves = {
             "up":self.move_up,
             "down":self.move_down,
             "right":self.move_right,
             "left":self.move_left
             }
+        choices = ["up","down","left","right"]
+        if direction == None:
+            direction = possible_moves[choices[index]]
         result = possible_moves[direction]()
         if not result:
             return False
