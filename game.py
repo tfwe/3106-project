@@ -181,10 +181,11 @@ class Board(object):
     def get_available_moves(self):
         available_moves = []
         possible_moves = ["up", "down", "right", "left"]
-        sim_board = Board(-1, self)
+        sim_board = Board(otherboard=self)
         for i in possible_moves:
             if sim_board.move(i):
                 available_moves.append(i)
+                sim_board = Board(otherboard=self)
                 sim_board = Board(-1, self)
         return np.array(available_moves)
    
