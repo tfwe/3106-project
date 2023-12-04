@@ -2,6 +2,7 @@ import numpy as np
 import random
 import math
 from colorama import Fore, Style, Back
+import matplotlib.pyplot as plt
 
 class Board(object):
     def __init__(self, size=4, otherboard=None):
@@ -102,7 +103,7 @@ class Board(object):
             y = open_tiles[rand_tile_index][0]
             x = open_tiles[rand_tile_index][1]
             self.board_array[y][x] = rand_piece
-
+        
     def move(self, direction=None, index=0):
         possible_moves = {
             "up":self.move_up,
@@ -203,15 +204,48 @@ class Board(object):
             rand_move = lambda moves: self.move(moves[0 if len(moves) == 1 else random.randint(0, len(moves) - 1)])
             return rand_move(moves)
         return False
+    
+    def random_sample_game(self, print_board=False, size=3):
+        board = Board(size)
+        board.start_game()
+        tiles = {}
+        while not board.is_game_over():
+            if print_board:
+                print(board)
+            board.random_move()
+        print(board)
+            # board.get_new_tiles()
+
+        max_tile = np.max(board.board_array)
+        num_turns = board.turn
+        return num_turns,max_tile
+    
 
 def main():
-    board = Board(3)
-    board.load_array(np.array([[-2,0,0],[2,0,0],[0,0,0]]))
-    # while not board.is_game_over():
-        # print(board)
-        # board.random_move()
-    print(board)
-    board.move('up')
-    print(board)
+    b = Board()
+
+    scores_random, best_tiles_random = [], []
+    for i in range(1000):
+        if i % 100 == 0:
+            print(f"Iteration {i}")
+        total_score, best_tile = b.random_sample_game()
+        scores_random.append(total_score)
+        best_tiles_random.append(best_tile)
+    print("Finish")
+
+    plt.hist(scores_random, bins = 50)
+    plt.title("Total score distribution")
+    plt.xlabel("Total Score")
+    plt.ylabel("Frequency")
+    plt.show()
+
+    max_power = int(math.log(max(best_tiles_random), 2)) + 1
+    min_power = int(math.log(min(best_tiles_random), 2))
+    unique, counts = np.unique(best_tiles_random, return_counts=True)
+    plt.bar([str(2 ** i) for i in range(min_power, max_power)], counts)
+    plt.title("Best tile distribution")
+    plt.xlabel("Best tile")
+    plt.ylabel("Frequency")
+    plt.show()
 if __name__ == "__main__":
     main()
