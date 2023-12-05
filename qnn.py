@@ -153,7 +153,7 @@ def main():
     gamma = 0.9
     target_update = 10
     episode_interval = 10
-    num_episodes = 1000
+    num_episodes = 100
     board = game.Board(size=3)
     board.start_game()
     state = encode_game_state(board.board_array)

@@ -171,30 +171,33 @@ def init_network():
     q_net.eval()
     return epsilon_end, epsilon_decay, q_net, device, batch_size
 
-def visualize_data(turns, max_tiles, min_tiles, piece_distributions, plt):
+def visualize_data(turns, max_tiles, min_tiles, piece_distributions, filename):
     plt.figure()
 
     # Plot histogram of turns
-    plt.subplot(2, 2, 1)
     plt.hist(turns)
-    plt.title(f'Number of turns taken in each game, mean: {np.mean(turns)}, std: {np.std(turns)}')
+    plt.title(f'Number of turns taken in each game, mean: {round(np.mean(turns), 4)}, std: {round(np.std(turns), 4)}')
+    plt.savefig(filename + "_num_turns")
 
     # Plot histogram of max tiles
-    plt.subplot(2, 2, 2)
+    plt.figure()
     plt.hist(max_tiles, bins=range(0, max(max_tiles)))
-    plt.title(f'Log(Max tile, 2) value in each game, mean: {np.mean(max_tiles)}, std: {np.std(max_tiles)}')
+    plt.title(f'Log(Max tile, 2) value in each game, mean: {round(np.mean(max_tiles), 4)}, std: {(np.std(max_tiles), 4)}')
+    plt.savefig(filename + "_max_tile")
 
     # Plot histogram of min tiles
-    plt.subplot(2, 2, 3)
+    plt.figure()
     plt.hist(min_tiles, bins=20)
     plt.title(f'Min tile value in each game')
+    plt.savefig(filename + "_min_tile")
 
     # Plot bar chart of piece distributions
-    plt.subplot(2, 2, 4)
+    plt.figure()
     all_tiles = [tile for dist in piece_distributions for tile in dist]
     all_counts = [count for dist in piece_distributions for count in dist.values()]
     plt.bar(all_counts, all_tiles)
     plt.title(f'Tile distributions across all games')
+    plt.savefig(filename + "_tile_dist")
 
     # Show the plot
     plt.show()
@@ -204,14 +207,14 @@ def main():
     n = 1
 
     turns, max_tiles, min_tiles, piece_distributions = sample_random_games(n)
-    visualize_data(turns, max_tiles, min_tiles, piece_distributions, plt)
+    visualize_data(turns, max_tiles, min_tiles, piece_distributions, f"random_{n}")
     
     epsilon_end, epsilon_decay, q_net, device, batch_size = init_network()
     turns, max_tiles, min_tiles, piece_distributions = sample_network_games(n, epsilon_end, epsilon_decay, q_net, device, batch_size)
-    visualize_data(turns, max_tiles, min_tiles, piece_distributions, plt)
+    visualize_data(turns, max_tiles, min_tiles, piece_distributions, f"qnn_{n}")
 
     turns, max_tiles, min_tiles, piece_distributions = sample_mcts_games(n)
-    visualize_data(turns, max_tiles, min_tiles, piece_distributions, plt)
+    visualize_data(turns, max_tiles, min_tiles, piece_distributions, f"mcts_{n}")
 
 
 

@@ -8,7 +8,7 @@ import sys
 from multiprocessing import Pool
 MAX_DEPTH = 7
 MAX_ITERATIONS = 2
-MAX_EXPANDED_NODES = 5
+MAX_EXPANDED_NODES = 35
 
 class Node(object):
     def __init__(self, move, board_array, parent=None):
