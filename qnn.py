@@ -14,21 +14,21 @@ class DQN(nn.Module):
         super(DQN, self).__init__()
         self.conv1 = nn.Conv2d(1, 512, kernel_size=1)
         self.conv2 = nn.Conv2d(512, 512, kernel_size=1)
-        self.fc1 = nn.Linear(4*4, 512)
+        self.fc1 = nn.Linear(512*9, 512)
         # self.fc2 = nn.Linear(120, 84)
         self.fc3 = nn.Linear(512, 4)  # 4 outputs for up, down, left, right
 
     def forward(self, x):
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
-        x = nn.Flatten()(x)
-        # x = x.view(1, 2048*4)  # Flatten layer
+        # x = nn.Flatten()(x)
+        x = x.view(1, 512*9)  # Flatten layer
         x = F.relu(self.fc1(x))
         # x = F.relu(self.fc2(x))
         x = self.fc3(x)  # No activation
         return x
 
-def init_batch(batch_size, board_size=4, board_array=np.array([])):
+def init_batch(batch_size, board_size=3, board_array=np.array([])):
     boards = []
     for i in range(batch_size):
         board = game.Board(size=board_size)
@@ -42,10 +42,10 @@ def init_batch(batch_size, board_size=4, board_array=np.array([])):
 def select_action(states, epsilon, q_net, device, batch_size):
     total_possible_actions = ["up", "down", "left", "right"]
     actions = []
-    sim_board = game.Board(4)
+    sim_board = game.Board(3)
     sim_board.start_game()
     for state in states:
-        sim_board.board_array = state.reshape(4,4)
+        sim_board.board_array = state.reshape(3,3)
         available_actions = sim_board.get_available_moves()
         if np.random.rand() < epsilon:
             legal_action_indices = [total_possible_actions.index(action) for action in available_actions]
@@ -55,7 +55,7 @@ def select_action(states, epsilon, q_net, device, batch_size):
             state = init_batch(batch_size, board_array=state)
             with torch.no_grad():
                 float32_state = np.float32(state)
-                state_tensor = torch.from_numpy(float32_state).view(batch_size, 4, 4).to(device)
+                state_tensor = torch.from_numpy(float32_state).view(batch_size, 1, 3, 3).to(device)
                 q_values = q_net(state_tensor).view(-1)
                 legal_action_indices = [total_possible_actions.index(action) for action in available_actions]
                 legal_q_values = q_values[legal_action_indices]
@@ -73,11 +73,18 @@ def update_q_net(q_net, target_net, replay_memory, batch_size, Transition, optim
                                           batch.next_state)), device=device, dtype=torch.bool)
     non_final_next_states = torch.cat([torch.tensor(s) for s in batch.next_state if s is not None]).to(device)
     # Compute the Q-learning loss
-    state_batch = torch.cat([torch.tensor(s) for s in batch.state]).view(batch_size,1,4,4).to(device)
-    print(batch.action)
-    action_batch = torch.cat([s.view(1,1) for s in batch.action]).to(device)
+    states_array = [torch.tensor(s) for s in batch.state]
+    actions_array = torch.tensor([batch_action.item() for batch_action in batch.action])
+    # print(actions_array[0])
+    # print(states_array[0])
+    state_batch = torch.cat(states_array).view(batch_size,1,3,3).to(device)
+    # print(torch.tensor([batch_action.item() for batch_action in batch.action]).unsqueeze(1))
+    actions_tensor = actions_array.unsqueeze(-2)
+    action_batch = torch.cat((actions_tensor,)).to(device)
     reward_batch = torch.cat(batch.reward).to(device)
 
+    # print(state_batch.size())
+    # print(action_batch.size())
     state_action_values = q_net(state_batch).gather(1, action_batch)
 
     next_state_values = torch.zeros(batch_size).to(device)
@@ -142,15 +149,14 @@ def calc_reward(board_array, prev_max_tile, prev_open_tiles, move_errors):
 def main():
     epsilon_end = 0.01
     epsilon_decay = 0.9
-    batch_size = 64
+    batch_size = 1
     gamma = 0.9
     target_update = 10
-    episode_interval = 100
+    episode_interval = 10
     num_episodes = 1000
-    board = game.Board(size=4)
+    board = game.Board(size=3)
     board.start_game()
     state = encode_game_state(board.board_array)
-    print(init_batch(64))
 
     # Check if CUDA is available
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -173,7 +179,7 @@ def main():
 
     loss_array = []
     for episode in range(num_episodes):  
-        board = game.Board(size=4)
+        board = game.Board(size=3)
         board.start_game()
         running_loss = 0.0
         total_steps = 0
@@ -213,17 +219,17 @@ def main():
 
 
 
-    # n = 1000
-    #
-    # turns, max_tiles, min_tiles, piece_distributions = sample_random_games(n)
-    # plt.figure()
-    # visualize_data(turns, max_tiles, min_tiles, piece_distributions, plt)
-    # plt.show()
-    #
-    # q_net.eval()
-    # turns, max_tiles, min_tiles, piece_distributions = sample_network_games(n, epsilon_end, epsilon_decay, q_net, device)
-    # visualize_data(turns, max_tiles, min_tiles, piece_distributions, plt)
-    # plt.show()
+    n = 1000
+
+    turns, max_tiles, min_tiles, piece_distributions = sample_random_games(n)
+    plt.figure()
+    visualize_data(turns, max_tiles, min_tiles, piece_distributions, plt)
+    plt.show()
+
+    q_net.eval()
+    turns, max_tiles, min_tiles, piece_distributions = sample_network_games(n, epsilon_end, epsilon_decay, q_net, device, batch_size)
+    visualize_data(turns, max_tiles, min_tiles, piece_distributions, plt)
+    plt.show()
 
 def sample_random_games(n):
     turns = []
@@ -231,7 +237,7 @@ def sample_random_games(n):
     min_tiles = []
     piece_distributions = []
     for i in range(n):
-        board = game.Board(size=4)
+        board = game.Board(size=3)
         board.start_game()
         while not board.is_game_over():
             board.random_move()
@@ -248,20 +254,21 @@ def sample_random_games(n):
     max_tiles = [int(math.log(max_tile, 2)) for max_tile in max_tiles]
     return turns, max_tiles, min_tiles, piece_distributions
 
-def sample_network_games(n, epsilon_end, epsilon_decay, q_net, device):
+def sample_network_games(n, epsilon_end, epsilon_decay, q_net, device, batch_size):
     turns = []
     max_tiles = []
     min_tiles = []
     piece_distributions = []
     for i in range(n):
-        board = game.Board(size=4)
+        board = game.Board(size=3)
         board.start_game()
         while not board.is_game_over():
             epsilon = max(epsilon_end, epsilon_decay * i)
-            action = select_action(board, epsilon, q_net, device)
+            action = select_action([board.board_array], epsilon, q_net, device, batch_size)
             # action = np.random.choice(board.get_available_moves())
             total_possible_actions = ["up","down","left","right"]
             board.move(total_possible_actions[action])
+        print(board)
         num_pieces = {}
         turns.append(board.turn)
         max_tiles.append(np.max(np.ravel(board.board_array)))
@@ -302,7 +309,6 @@ def visualize_data(turns, max_tiles, min_tiles, piece_distributions, plt):
     # Show the plot
 
 def visualize_loss(loss_array, num_episodes):
-    print(loss_array)
     plt.figure()
     plt.plot(np.arange(num_episodes), loss_array)
     plt.title(f'Running loss during training across {num_episodes}, mean: {np.mean(loss_array)}')
