@@ -18,6 +18,8 @@
 
 ### Q-Learning
 
+In the proposal we had the intention of using Q-learning to map the state action pairs of 2048 to their respective Q-values and repeating this process until they converge. However we quickly realized that this would be next to impossible for a complex game like 2048. The game 2048 has a large action space which means that it has four possible moves (up,down,left and right) for each game state. Q-Learning is able to handle problems with a discrete number of actions like this but when applied to larger problems like 2048 it is unable to process that many different states.
+
 ### Deep Q-Learning (DQN)
 
 
