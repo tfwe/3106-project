@@ -47,4 +47,5 @@
 
 ## References
 
+GitHub. (n.d.). https://github.com/qwert12500/2048_rl/blob/main/2048_Reinforcement_Learning.ipynb 
   
