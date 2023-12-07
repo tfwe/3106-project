@@ -50,11 +50,14 @@ We tested 3 different policies on 2048 to interpret and evaluate performance. To
 ## Running the Project Locally
 This project can be run by cloning or downloading the repository on GitHub (https://github.com/tfwe/3106-project/) and running the following shell commands in the root directory of the downloaded repository. 
 
->`pip3 install -r requiremnets.txt`
->`python3 test.py [NUM_RUNS]`
+  >`pip3 install -r requiremnets.txt`
+  
+  >`python3 test.py [NUM_RUNS]`
 
 If specified, `NUM_RUNS` will allow `test.py` to sample `NUM_RUNS` games from each policy. For example, we can run 
->`python3 test.py 1000`
+
+  >`python3 test.py 1000`
+
 to extract data from 1000 games on each policy. 
 
 ## References
