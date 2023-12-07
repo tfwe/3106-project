@@ -10,13 +10,10 @@ import torch.optim as optim
 import torch.nn.functional as F
 import matplotlib
 import matplotlib.pyplot as plt
+import pandas as pd
+import sys
+import os
 from collections import namedtuple, deque
-
-def test_MCTS():
-    return 0
-
-def test_DQN(n):
-    return 0
 
 def sample_random_games(n):
     turns = []
@@ -79,7 +76,6 @@ def sample_network_games(n, epsilon_end, epsilon_decay, q_net, device, batch_siz
         while not board.is_game_over():
             epsilon = max(epsilon_end, epsilon_decay * i)
             action = qnn.select_action([board.board_array], epsilon, q_net, device, batch_size)
-            # action = np.random.choice(board.get_available_moves())
             total_possible_actions = ["up","down","left","right"]
             board.move(total_possible_actions[action])
         print(board)
@@ -127,8 +123,13 @@ def init_network():
     # define replay memory
     Transition = namedtuple('Transition', ('state', 'action', 'next_state', 'reward'))
     replay_memory = deque(maxlen=10000)
-    q_net.load_state_dict(torch.load('./q_net.pth'))
-    target_net.load_state_dict(torch.load('./target_net.pth'))
+    if not os.path.exists('./q_net.pth') or not os.path.exists('./target_net.pth'):
+        num_episodes = 100
+        print(f"Pre-trained network not found, training for {num_episodes} episodes...")
+    else:
+        q_net.load_state_dict(torch.load('./q_net.pth'))
+        target_net.load_state_dict(torch.load('./target_net.pth'))
+        print("Using pre-trained network...")
     if num_episodes > 0:
         loss_array = []
         for episode in range(num_episodes):  
@@ -161,8 +162,8 @@ def init_network():
                     if total_steps % target_update == 0:
                         qnn.update_target_net(target_net, q_net)
                         q_net.train()
-                        torch.save(q_net.state_dict(), './q_net.pth')
-                        torch.save(target_net.state_dict(), './target_net.pth')
+                        # torch.save(q_net.state_dict(), './q_net.pth')
+                        # torch.save(target_net.state_dict(), './target_net.pth')
             if episode % episode_interval == 0:
                 print(f"episode: {episode}")
                 print(board)
@@ -182,7 +183,7 @@ def visualize_data(turns, max_tiles, min_tiles, piece_distributions, filename):
     # Plot histogram of max tiles
     plt.figure()
     plt.hist(max_tiles, bins=range(0, max(max_tiles)))
-    plt.title(f'Log(Max tile, 2) value in each game, mean: {round(np.mean(max_tiles), 4)}, std: {(np.std(max_tiles), 4)}')
+    plt.title(f'Log(Max tile, 2) value in each game, mean: {round(np.mean(max_tiles), 4)}, std: {round(np.std(max_tiles), 4)}')
     plt.savefig(filename + "_max_tile")
 
     # Plot histogram of min tiles
@@ -200,24 +201,58 @@ def visualize_data(turns, max_tiles, min_tiles, piece_distributions, filename):
     plt.savefig(filename + "_tile_dist")
 
     # Show the plot
-    plt.show()
+    # plt.show()
 
 def main():
+    if len(sys.argv) > 1:
+        n = int(sys.argv[1])
+    else:
+        n = 1
 
-    n = 1
-
-    turns, max_tiles, min_tiles, piece_distributions = sample_random_games(n)
-    visualize_data(turns, max_tiles, min_tiles, piece_distributions, f"random_{n}")
+    print(f"Running random, QNN, and MCTS policies on {n} games...")
+    print(f"\nTesting random on {n} runs...")
+    turns_random, max_tiles_random, min_tiles_random, piece_distributions_random = sample_random_games(n)
+    print("Random test complete")
+    visualize_data(turns_random, max_tiles_random, min_tiles_random, piece_distributions_random, f"./Results/random_{n}")
     
+    print(f"\nTesting QNN...")
+    print(f"Initializizing neural network...")
     epsilon_end, epsilon_decay, q_net, device, batch_size = init_network()
-    turns, max_tiles, min_tiles, piece_distributions = sample_network_games(n, epsilon_end, epsilon_decay, q_net, device, batch_size)
-    visualize_data(turns, max_tiles, min_tiles, piece_distributions, f"qnn_{n}")
+    print(f"Testing QNN on {n} runs...")
+    turns_qnn, max_tiles_qnn, min_tiles_qnn, piece_distributions_qnn = sample_network_games(n, epsilon_end, epsilon_decay, q_net, device, batch_size)
+    print("Qnn test complete")
+    visualize_data(turns_qnn, max_tiles_qnn, min_tiles_qnn, piece_distributions_qnn, f"./Results/qnn_{n}")
 
-    turns, max_tiles, min_tiles, piece_distributions = sample_mcts_games(n)
-    visualize_data(turns, max_tiles, min_tiles, piece_distributions, f"mcts_{n}")
+    print(f"\nTesting MCTS...")
+    print(f"Testing MCTS on {n} runs...")
+    turns_mcts, max_tiles_mcts, min_tiles_mcts, piece_distributions_mcts = sample_mcts_games(n)
+    print("MCTS test complete")
+    visualize_data(turns_mcts, max_tiles_mcts, min_tiles_mcts, piece_distributions_mcts, f"./Results/mcts_{n}")
 
+    print("Saving results...")
+    df_random = pd.DataFrame({
+        'turns': turns_random,
+        'max_tiles': max_tiles_random,
+        'min_tiles': min_tiles_random,
+        'piece_distributions': piece_distributions_random
+    })
+    df_qnn = pd.DataFrame({
+        'turns': turns_qnn,
+        'max_tiles': max_tiles_qnn,
+        'min_tiles': min_tiles_qnn,
+        'piece_distributions': piece_distributions_qnn
+    })
+    df_mcts = pd.DataFrame({
+        'turns': turns_mcts,
+        'max_tiles': max_tiles_mcts,
+        'min_tiles': min_tiles_mcts,
+        'piece_distributions': piece_distributions_mcts
+    })
 
-
+    df_random.to_csv(f'./Results/random_{n}_data.csv', index=False)
+    df_qnn.to_csv(f'./Results/qnn_{n}_data.csv', index=False)
+    df_mcts.to_csv(f'./Results/mcts_{n}_data.csv', index=False)
+    print("Results have been saved to ./Results/")
 
 if __name__ == "__main__":
     main()
