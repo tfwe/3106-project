@@ -25,9 +25,6 @@ In the proposal we had the intention of using Q-learning to map the state action
 
 ### Monte Carlo Tree Search (MCTS)
 
-## Results
-We tested 3 different policies on 2048 to interpret and evaluate performance. To validate our results, we sampled 1000 games under a random move policy, and extracted the distribution of maximum value tiles, the number of turns, and the distribution of different values pieces as each game progressed. We used each of these inferences as our ground truths, and used them to compare the results we obtained from our DQN and MCTS policies. For visual simplicity, we are using the base 2 logarithm of each piece's respective value to represent it. 
-
 ## Running the Project Locally
 This project can be run by cloning or downloading the repository on GitHub (https://github.com/tfwe/3106-project/) and running the following shell commands in the root directory of the downloaded repository. 
 
@@ -39,12 +36,15 @@ If specified, `NUM_RUNS` will allow `test.py` to sample `NUM_RUNS` games from ea
 
   >`python3 test.py 1000`
 
-The data extracted will be saved the the `./Results` folder, which will include a visual representation of each distribution, as well as the CSV files containing the raw data collected from each game used to generate the visuals.
-
 ### Multithreading Crashes
 Occasionally, only when running from `test.py`, the multithreading module used in `mcts.py` may complain about being not running in main loop. This can be mitigated by simply running shell command in the repository's root directory to test the MCTS implementation instead. 
 
   >`python3 mcts.py` 
+
+The data extracted will be saved the the `./Results` folder, which will include a visual representation of each distribution, as well as the CSV files containing the raw data collected from each game used to generate the visuals.
+
+## Results
+We tested 3 different policies on 2048 to interpret and evaluate performance. To validate our results, we sampled 1000 games under a random move policy, and extracted the distribution of maximum value tiles, the number of turns, and the distribution of different values pieces as each game progressed. We used each of these inferences as our ground truths, and used them to compare the results we obtained from our DQN and MCTS policies. For visual simplicity, we are using the base 2 logarithm of each piece's respective value to represent it. 
 
 ### Random Sample Games:
 ![random_1000_num_turns](https://github.com/tfwe/3106-project/assets/93735375/1e6300cc-97d8-4f5b-bd6d-178cced67c6e)
@@ -60,7 +60,6 @@ Occasionally, only when running from `test.py`, the multithreading module used i
 ![mcts_1000_tile_dist](https://github.com/tfwe/3106-project/assets/93735375/a97b2fd0-582b-43f1-8505-43baf1cd5c5f)
 ![mcts_1000_max_tile](https://github.com/tfwe/3106-project/assets/93735375/cd052f49-8d9c-43a0-84ca-c29774bc65e8)
 ![mcts_1000_num_turns](https://github.com/tfwe/3106-project/assets/93735375/2412efe3-420c-4c9a-ae55-f8a6018d564a)
-
 
 ## Discussion
 
