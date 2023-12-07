@@ -64,6 +64,6 @@ We tested 3 different policies on 2048 to interpret and evaluate performance. To
 ## Discussion
 
 ## References
-- GitHub. (n.d.). https://github.com/qwert12500/2048_rl/blob/main/2048_Reinforcement_Learning.ipynb 
+- Chan, L. H. (2022, June 9). Playing 2048 with Deep Q-Learning (With Pytorch implementation). Medium. https://medium.com/@qwert12500/playing-2048-with-deep-q-learning-with-pytorch-implementation-4313291efe61
 
 - Silver, D., Hubert, T., Schrittwieser, J., Antonoglou, I., Lai, M., Guez, A., Lanctot, M., Sifre, L., Kumaran, D., Graepel, T., Lillicrap, T., Simonyan, K., & Hassabis, D. (2017). Mastering chess and shogi by self-play with a general reinforcement learning algorithm. https://doi.org/10.48550/ARXIV.1712.01815
