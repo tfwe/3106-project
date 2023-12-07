@@ -47,19 +47,21 @@ The data extracted will be saved the the `./Results` folder, which will include 
 We tested 3 different policies on 2048 to interpret and evaluate performance. To validate our results, we sampled 1000 games under a random move policy, and extracted the distribution of maximum value tiles, the number of turns, and the distribution of different values pieces as each game progressed. We used each of these inferences as our ground truths, and used them to compare the results we obtained from our DQN and MCTS policies. For visual simplicity, we are using the base 2 logarithm of each piece's respective value to represent it. 
 
 ### Random Sample Games:
-![random_1000_num_turns](https://github.com/tfwe/3106-project/assets/93735375/1e6300cc-97d8-4f5b-bd6d-178cced67c6e)
-![random_1000_max_tile](https://github.com/tfwe/3106-project/assets/93735375/8eb3f3ac-c2a8-45cc-b66d-7cb79489f9a7)
-![random_1000_tile_dist](https://github.com/tfwe/3106-project/assets/93735375/7360e8db-be8b-4d32-9ea4-473b6ff1e8cb)
+![random_1000_num_turns](./Data/random_1000_num_turns.png)
+[<img src="./Data/random_1000_num_turns.png" width="400" />](./Data/random_1000_num_turns.png)
+<img src="./Data/random_1000_num_turns.png" width="400" />
+![random_1000_max_tile](./Data/random_1000_max_tile.png)
+![random_1000_tile_dist](./Data/random_1000_tile_dist.png)
 
 ### DQN Sample Games:
-![qnn_1000_num_turns](https://github.com/tfwe/3106-project/assets/93735375/1b53383e-3d36-4ee3-9546-b6f80ff71be4)
-![qnn_1000_max_tile](https://github.com/tfwe/3106-project/assets/93735375/0e0089e0-7722-433e-b088-84591a557fe2)
-![qnn_1000_tile_dist](https://github.com/tfwe/3106-project/assets/93735375/c8a8a054-38db-4f22-a2b5-d0edd819d131)
+![qnn_1000_num_turns](./Data/qnn_1000_num_turns.png)
+![qnn_1000_max_tile](./Data/qnn_1000_max_tile.png)
+![qnn_1000_tile_dist](./Data/qnn_1000_tile_dist.png)
 
 ### MCTS Sample Games:
-![mcts_1000_tile_dist](https://github.com/tfwe/3106-project/assets/93735375/a97b2fd0-582b-43f1-8505-43baf1cd5c5f)
-![mcts_1000_max_tile](https://github.com/tfwe/3106-project/assets/93735375/cd052f49-8d9c-43a0-84ca-c29774bc65e8)
-![mcts_1000_num_turns](https://github.com/tfwe/3106-project/assets/93735375/2412efe3-420c-4c9a-ae55-f8a6018d564a)
+![mcts_1000_num_turns](./Data/mcts_1000_num_turns.png)
+![mcts_1000_max_tile](./Data/mcts_1000_max_tile.png)
+![mcts_1000_tile_dist](./Data/mcts_1000_tile_dist.png)
 
 ## Discussion
 

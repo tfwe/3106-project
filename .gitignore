@@ -30,8 +30,8 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-*.png
-*.csv
+Results/*.png
+Results/*.csv
 *.pth
 # PyInstaller
 #  Usually these files are written by a python script from a template
