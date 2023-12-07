@@ -106,8 +106,12 @@ def init_network():
     state = qnn.encode_game_state(board.board_array)
 
     # Check if CUDA is available
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    print(f"using device {torch.cuda.get_device_name(0)}...")
+    device = torch.device("cpu")
+    if torch.cuda.is_available(): 
+        print(f"using device {torch.cuda.get_device_name(0)}")
+        device = torch.device("cuda:0")
+    else:
+        print(f"CUDA not available, using device CPU...")
 
     # Initialize the network
     q_net = qnn.DQN().to(device)
