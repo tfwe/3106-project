@@ -34,7 +34,7 @@ The last method we implemented was Monte Carlo Tree Search. This is a model-less
 
 From each new node in the tree, we then run the `simulation` function. This function plays a random move on a simulated board from the each of the leaves of the tree and evaluates its subsequent position based on an evaluation function that assigns a score to a position given the number of empty tiles and the sum of all tiles on the board. The function we used to calculate this is simply the sum of values on the board array multiplied by the number of empty tiles available. 
 
-Each leaf node is then passed into the `update` function, which updates the scores of all parent nodes associated with the given child node. The score of a parent node after this function runs is the sum of all the scores of its children. The `update` function also updates the number of times each node has been updated. This is to allow us to balance exploration vs exploitation in our move selection process. This process of 
+Each leaf node is then passed into the `update` function, which updates the scores of all parent nodes associated with the given child node. The score of a parent node after this function runs is the sum of all the scores of its children. The `update` function also updates the number of times each node has been updated. This is to allow us to balance exploration vs exploitation in our move selection process.
 
 To finally select a move from our tree, we call the `selection` function on the leaf nodes of our tree. Here, we assign a `UCB1` (Upper Confidence Bound) score to each node, which balances the score that node received with the number of times it has been played. The `UCB1` score of a node is given by the following function.
 
