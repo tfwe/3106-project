@@ -73,20 +73,23 @@ Upon testing our implementations against each other, we found that while the Q-L
 
 ### Quantitative
 
-#### Random Sample Games:
-
+#### 1000 Random Sample Games:
 [<img src="./Data/random_1000_num_turns.png" width="400" />](./Data/random_1000_num_turns.png)
 [<img src="./Data/random_1000_max_tile.png" width="400" />](./Data/random_1000_max_tile.png)
 [<img src="./Data/random_1000_min_tile.png" width="400" />](./Data/random_1000_min_tile.png)
 [<img src="./Data/random_1000_tile_dist.png" width="400" />](./Data/random_1000_tile_dist.png)
 
-#### DQN Sample Games:
+Our random sample games show us that on average, each game lasts 62 turns when using a random move policy. The longest game played lasted for 154 turns, and the maximum-valued tile reached was 64. 
+
+#### 1000 DQN Sample Games:
 [<img src="./Data/qnn_1000_num_turns.png" width="400" />](./Data/qnn_1000_num_turns.png)
 [<img src="./Data/qnn_1000_max_tile.png" width="400" />](./Data/qnn_1000_max_tile.png)
 [<img src="./Data/qnn_1000_min_tile.png" width="400" />](./Data/qnn_1000_min_tile.png)
 [<img src="./Data/qnn_1000_tile_dist.png" width="400" />](./Data/qnn_1000_tile_dist.png)
 
-#### MCTS Sample Games:
+Our DQN sample games show us a result that is akin to random play. We found that using our model also averaged 62 turns and the longest game lasted for 157 turns, which is similar to that of the random policy test. The maximum valued tile our model reached was 32.
+
+#### 1000 MCTS Sample Games:
 [<img src="./Data/mcts_1000_num_turns.png" width="400" />](./Data/mcts_1000_num_turns.png)
 [<img src="./Data/mcts_1000_max_tile.png" width="400" />](./Data/mcts_1000_max_tile.png)
 [<img src="./Data/mcts_1000_min_tile.png" width="400" />](./Data/mcts_1000_min_tile.png)
@@ -98,7 +101,7 @@ Monte Carlo Tree Search by far outperformed our Deep Q-Learning neural network a
 ## Discussion
 
 ### Limitations of the work and directions for future work
-By using Monte Carlo Tree Search there are only certain tasks that this method can be applied to. Using MCTS the agent does not learn from it's past experiences nor does it utilize a neural network which would have been a very valuable tool for this problem. Things that could be done in the future to make this implementation even more efficient would be to use a neural network to calculate the weights instead of statically setting them. As well as making use of a replay buffer, if the replay buffer had been used correctly in the DQN version of this problem then it would have been able to use it's past experiences to influence it's future decisions.
+By using Monte Carlo Tree Search there are only certain tasks that this method can be applied to. Using MCTS the agent does not learn from its past experiences nor does it utilize a neural network which would have been a very valuable tool for this problem. Things that could be done in the future to make this implementation even more efficient would be to use a neural network in conjunction with MCTS rather than as mutually exclusive methods. We believe that if we had been able to correctly utilize mini-batches with our transition and replay buffers in our DQN, we may have been able to see better performance from the neural network. DQN version of this problem then it would have been able to use it's past experiences to influence it's future decisions. After seeing the potential of MCTS, it may also be worth exploring the effectiveness of other graph-searching techniques. 
 
 ### Implications of the Work
 - Game AI: Using our agent for games like 2048 we gather that this can be a challenging opponent for an individual wanting to increase their skill at a given game. Implications of agents that can learn to play games are vast, since there are many problems that can be applied to a "game" setting. For example, AlphaTensor is an example of an implementation that uses Monte Carlo Tree Search guided by a deep neural network, which was used to discover a faster method of matrix multiplication for GPUs and TPUs, improving both the accessibility and scalability of training other AI models.
