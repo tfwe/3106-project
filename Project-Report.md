@@ -67,20 +67,26 @@ If specified, `NUM_RUNS` will allow `test.py` to sample `NUM_RUNS` games from ea
 ## Results
 We tested 3 different policies on 2048 to interpret and evaluate performance. To validate our results, we sampled 1000 games under a random move policy, and extracted the distribution of maximum value tiles, the number of turns, and the distribution of different values pieces as each game progressed. We used each of these inferences as our ground truths, and used them to compare the results we obtained from our DQN and MCTS policies. For visual simplicity, we are using the base 2 logarithm of each piece's respective value to represent it. For negative and 0-valued tiles, we are representing them using `(-1) * log2(abs(tile_value))` and `0` respectively. This means that given the tile values `[-4, -2, 0, 2, 4, 8, 16, 32]`, we would represent them as `[-2, -1, 0, 1, 2, 3, 4, 5]`.
 
-### Random Sample Games:
+### Qualitative
+
+Upon testing our implementations against each other, we found that while the Q-Learning neural network took longer to train, once it was trained, it evaluated positions just as fast as the random policy. In our case, the model we learned seemed unable to reasonably perform better than the random policy, but we believe that this is more of a limitation in our knowledge of deep Q-learning than it is a limitation of the method used. Monte Carlo Tree Search, in comparison, was much slower but performed significantly better on average in comparison to the random and deep Q-learning policies. Because of the iterative search nature of the algorithm, and the fact that we are not learning a model of the environment results in Monte Carlo Tree Search to be slower and exponentially more computationally expensive as the algorithm iterates through higher depths in the state space. There are a number of improvements that could be made to the implementation that would help to increase the speed of the algorithm, such as using a more efficient representation of the board state such as a bitboard representation. Regardless of these limitations, however, we were still able to reasonably simulate enough games to evaluate the performance.
+
+### Quantitative
+
+#### Random Sample Games:
 
 [<img src="./Data/random_1000_num_turns.png" width="400" />](./Data/random_1000_num_turns.png)
 [<img src="./Data/random_1000_max_tile.png" width="400" />](./Data/random_1000_max_tile.png)
 [<img src="./Data/random_1000_min_tile.png" width="400" />](./Data/random_1000_min_tile.png)
 [<img src="./Data/random_1000_tile_dist.png" width="400" />](./Data/random_1000_tile_dist.png)
 
-### DQN Sample Games:
+#### DQN Sample Games:
 [<img src="./Data/qnn_1000_num_turns.png" width="400" />](./Data/qnn_1000_num_turns.png)
 [<img src="./Data/qnn_1000_max_tile.png" width="400" />](./Data/qnn_1000_max_tile.png)
 [<img src="./Data/qnn_1000_min_tile.png" width="400" />](./Data/qnn_1000_min_tile.png)
 [<img src="./Data/qnn_1000_tile_dist.png" width="400" />](./Data/qnn_1000_tile_dist.png)
 
-### MCTS Sample Games:
+#### MCTS Sample Games:
 [<img src="./Data/mcts_1000_num_turns.png" width="400" />](./Data/mcts_1000_num_turns.png)
 [<img src="./Data/mcts_1000_max_tile.png" width="400" />](./Data/mcts_1000_max_tile.png)
 [<img src="./Data/mcts_1000_min_tile.png" width="400" />](./Data/mcts_1000_min_tile.png)
