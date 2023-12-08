@@ -242,14 +242,14 @@ def log_2_neg(tile):
         return 0
     return (-1)*(int(math.log(math.fabs(tile), 2)))
 
-def visualize_data(turns, max_tiles, min_tiles, piece_distributions, filename):
+def visualize_data(turns, max_tiles, min_tiles, piece_distributions, filename, policy="Random"):
     plt.figure()
 
     # Plot histogram of turns
     plt.hist(turns)
-    plt.title(f'Number of Turns Taken Across All Games\nmax: {max(turns)}, min: {min(turns)}, mean: {round(np.mean(turns), 4)}, std: {round(np.std(turns), 4)}')
-    plt.xlabel("Number of turns taken")
-    plt.ylabel("Number of Games")
+    plt.title(f'{policy} - Number of Turns Taken Across All Games\nmax: {max(turns)}, min: {min(turns)}, mean: {round(np.mean(turns), 4)}, std: {round(np.std(turns), 4)}')
+    plt.xlabel("Number of Turns Taken")
+    plt.ylabel("Number of Games Played")
     plt.savefig(filename + "_num_turns")
 
     # Plot histogram of max tiles
@@ -264,9 +264,9 @@ def visualize_data(turns, max_tiles, min_tiles, piece_distributions, filename):
     plt.figure()
     min_tiles = [int(log_2_neg(min_tile)) for min_tile in min_tiles]
     plt.hist(min_tiles)
-    plt.title(f'Log(Min tile, 2) value in each game\nmax: {max(min_tiles)}, min: {min(min_tiles)}, mean: {round(np.mean(min_tiles), 4)}, std: {round(np.std(min_tiles), 4)}')
-    plt.xlabel("Minimum Value Tile ((-1) * log2(abs(min_tile)))")
-    plt.ylabel("Number of Games")
+    plt.title(f'Min Value Tile Across All Games\nmax: {max(min_tiles)}, min: {min(min_tiles)}, mean: {round(np.mean(min_tiles), 4)}, std: {round(np.std(min_tiles), 4)}')
+    plt.xlabel("Minimum Value Tile (log2 of value with 0s and negatives representation")
+    plt.ylabel("Number of Games Played")
     plt.savefig(filename + "_min_tile")
 
     # Plot bar chart of piece distributions
@@ -274,9 +274,9 @@ def visualize_data(turns, max_tiles, min_tiles, piece_distributions, filename):
     all_tiles = [log_2_neg(tile) for dist in piece_distributions for tile in dist]
     all_counts = [count for dist in piece_distributions for count in dist.values()]
     plt.bar(all_tiles, all_counts)
-    plt.xlabel("Tile Value (log2 with negatives representation)")
+    plt.xlabel("Tile Value (log2 of value with 0s and negatives representation)")
     plt.ylabel("Number of Times Counted")
-    plt.title(f'Tile distributions across all games')
+    plt.title(f'Tile Distributions Across All Games')
     plt.savefig(filename + "_tile_dist")
 
     # Show the plot
@@ -304,16 +304,16 @@ def main():
     print(f"Running random, QNN, and MCTS policies on {n} games...")
     print(f"\nTesting random on {n} runs...")
 
-    turns_random, max_tiles_random, min_tiles_random, piece_distributions_random = sample_random_games(n)
+    # turns_random, max_tiles_random, min_tiles_random, piece_distributions_random = sample_random_games(n)
+    # turns_random, max_tiles_random, min_tiles_random, piece_distributions_random = csv_to_arrays("./Data/random_1000_data.csv")
     df_random = pd.DataFrame({
         'turns': turns_random,
         'max_tiles': max_tiles_random,
         'min_tiles': min_tiles_random,
         'piece_distributions': piece_distributions_random
     })
-    # turns_random, max_tiles_random, min_tiles_random, piece_distributions_random = csv_to_arrays("./Data/random_1000_data.csv")
-    visualize_data(turns_random, max_tiles_random, min_tiles_random, piece_distributions_random, f"./Results/random_{n}")
-    df_random.to_csv(f'./Data/random_{n}_data.csv', index=False)
+    visualize_data(turns_random, max_tiles_random, min_tiles_random, piece_distributions_random, f"./Results/random_{n}", policy="Random")
+    df_random.to_csv(f'./Results/random_{n}_data.csv', index=False)
     print("Random test complete")
 
     print(f"\nTesting QNN...")
@@ -328,12 +328,13 @@ def main():
         'min_tiles': min_tiles_qnn,
         'piece_distributions': piece_distributions_qnn
     })
-    visualize_data(turns_qnn, max_tiles_qnn, min_tiles_qnn, piece_distributions_qnn, f"./Results/qnn_{n}")
+    visualize_data(turns_qnn, max_tiles_qnn, min_tiles_qnn, piece_distributions_qnn, f"./Results/qnn_{n}", policy="QNN")
     df_qnn.to_csv(f'./Results/qnn_{n}_data.csv', index=False)
     print("QNN test complete")
 
     print(f"\nTesting MCTS...")
     print(f"Testing MCTS on {n} runs...")
+    # turns_mcts, max_tiles_mcts, min_tiles_mcts, piece_distributions_mcts = csv_to_arrays("./Data/mcts_1000_data.csv")
     turns_mcts, max_tiles_mcts, min_tiles_mcts, piece_distributions_mcts = sample_mcts_games(n)
     df_mcts = pd.DataFrame({
         'turns': turns_mcts,
@@ -341,8 +342,7 @@ def main():
         'min_tiles': min_tiles_mcts,
         'piece_distributions': piece_distributions_mcts
     })
-    # turns_mcts, max_tiles_mcts, min_tiles_mcts, piece_distributions_mcts = csv_to_arrays("./Data/mcts_1000_data.csv")
-    visualize_data(turns_mcts, max_tiles_mcts, min_tiles_mcts, piece_distributions_mcts, f"./Results/mcts_{n}")
+    visualize_data(turns_mcts, max_tiles_mcts, min_tiles_mcts, piece_distributions_mcts, f"./Results/mcts_{n}", policy="MCTS")
     df_mcts.to_csv(f'./Results/mcts_{n}_data.csv', index=False)
     print("MCTS test complete")
 
