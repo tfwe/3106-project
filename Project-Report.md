@@ -12,7 +12,7 @@
 ## Introduction
 ### Background and Motivation for the Project
 
-The motivation behind this idea was that Carlo and I wanted to find a fun and interesting way that we could apply the methods used earlier in the course to solve a game. We had initially thought of ideas like creating an AI for Chess or Tetris but those ideas were a bit too far out of our knowledge. We looked for something that was a challenge yet still felt possible for our given knowledge on the subject. Given these parameters, we decided to make a version of 2048 with a 3x3 grid instead of 4x4 this greatly reduces the time it takes to run our agent we also added negative tiles that cancel out with positive ones this was to help make a 3x3 board possible, the negative tiles help to free up other spaces. The only issue we had left was the scoring, in regular 2048 the score is based on the tiles that are merged together. For example combining a 32 with another 32 results in the score increasing by 64. This would be obstructed by the new negative tiles that were added so instead subtracting from the score when combining negative tiles with positive ones, we determined that the best gage of score in this new version would be how many turns the agent is able to play for. 
+  The motivation behind this idea was that Carlo and I wanted to find a fun and interesting way that we could apply the methods used earlier in the course to solve a game. We had initially thought of ideas like creating an AI for Chess or Tetris but those ideas were a bit too far out of our knowledge. We looked for something that was a challenge yet still felt possible for our given knowledge on the subject. Given these parameters, we decided to make a version of 2048 with a 3x3 grid instead of 4x4 this greatly reduces the time it takes to run our agent we also added negative tiles that cancel out with positive ones this was to help make a 3x3 board possible, the negative tiles help to free up other spaces. The only issue we had left was the scoring, in regular 2048 the score is based on the tiles that are merged together. For example combining a 32 with another 32 results in the score increasing by 64. This would be obstructed by the new negative tiles that were added so instead subtracting from the score when combining negative tiles with positive ones, we determined that the best gage of score in this new version would be how many turns the agent is able to play for. 
 
 ### Objectives 
 
@@ -27,12 +27,12 @@ Our objectives changed considerbly over the course of the project:
 - Implementing the game 2048 using Monte Carlo Search trees
 
 ### Related Prior Work
-Carlo and I both have experience with neural networks from Comp 3105 (Machine Learning) where we had to make a Convolutional Neural Network to identify images of numbers. We also have a good understanding of how Q-learning may be applied to our game especially after completing assignment 3.
+  Carlo and I both have experience with neural networks from Comp 3105 (Machine Learning) where we had to make a Convolutional Neural Network to identify images of numbers. We also have a good understanding of how Q-learning may be applied to our game especially after completing assignment 3.
 
 ## Methods
 ### Q-Learning
 
-In the proposal we had the intention of using Q-learning to map the state action pairs of 2048 to their respective Q-values and repeating this process until they converge. However we quickly realized that this would be next to impossible for a complex game like 2048. The game 2048 has a large action space which means that it has four possible moves (up,down,left and right) for each game state. Q-Learning is able to handle problems with a discrete number of actions like this but when applied to larger problems like 2048 it is unable to process that many different states.
+  In the proposal we had the intention of using Q-learning to map the state action pairs of 2048 to their respective Q-values and repeating this process until they converge. However we quickly realized that this would be next to impossible for a complex game like 2048. The game 2048 has a large action space which means that it has four possible moves (up,down,left and right) for each game state. Q-Learning is able to handle problems with a discrete number of actions like this but when applied to larger problems like 2048 it is unable to process that many different states.
 
 ### Deep Q-Learning (DQN)
 
@@ -41,7 +41,7 @@ In the proposal we had the intention of using Q-learning to map the state action
 ### Monte Carlo Tree Search (MCTS)
 
 ## Validation Strategies
-In order to see that our implementation was effective we used retrospective validation where we took different statistics about each different method we had avialible to us and compared them against eachother
+  In order to see that our implementation was effective we used retrospective validation where we took different statistics about each different method we had avialible to us and compared them against eachother
 ## Running the Project Locally
 This project can be run by cloning or downloading the repository on GitHub (https://github.com/tfwe/3106-project/) and running the following shell commands in the root directory of the downloaded repository. 
 
