@@ -40,7 +40,8 @@ Instead of abandoning the Q-learning method there was an alternative that can st
 ### Monte Carlo Tree Search (MCTS)
 
 ## Validation Strategies
-In order to see whether our implementation was effective, we used retrospective validation where we took different statistics about each different method such as the max tile, min tile, distribution of tiles and number of turns and we compared them against eachother. These statistics can be found in the results section of the report.
+In order to see that our implementation was effective we used retrospective validation where we took different statistics about each different method including the max tile, min tile, distribution of tiles and number of turns and we compared them against each other. These statistics can be found in the results section of the report.
+
   
 ## Running the Project Locally
 This project can be run by cloning or downloading the repository on GitHub (https://github.com/tfwe/3106-project/) and running the following shell commands in the root directory of the downloaded repository. 
@@ -87,10 +88,16 @@ We tested 3 different policies on 2048 to interpret and evaluate performance. To
 
 Monte Carlo Tree Search by far outperformed our Deep Q-Learning neural network and the random move policy in both the maximum tile reached on average, as well as the number of turns played on average before the game ends. 
 
+
 ## Discussion
 
 ### Limitations of the work and directions for future work
-Monte Carlo Tree Search, although being the best solution that we could implement, can still be improved upon. By nature of being an iterative algorithm to approximate optimal moves in a sequential environment, MCTS is computationally expensive and considerably slower than other methods to find optimal moves.
+By using Monte Carlo Tree Search there are only certain tasks that this method can be applied to. Using MCTS the agent does not learn from it's past experiences nor does it utilize a neural network which would have been a very valuable tool for this problem. Things that could be done in the future to make this implementation even more efficient would be to use a neural network to calculate the weights instead of statically setting them. As well as making use of a replay buffer, if the replay buffer had been used correctly in the DQN version of this problem then it would have been able to use it's past experiences to influence it's future decisions.
+
+### Implications of the Work
+- Game AI: Using our agent for games like 2048 we gather that this can be a challenging opponent for an individual wanting to increase their skill at a given game. 
+- Algorithm Comparison: By implementing a 2048 agent the different approaches of DQN and Monte Carlo Tree Search can be better compared providing insight on their respective strengths and weaknesses.
+- Educational Puposes: This AI agent can be used as reference on how to create and use Monte Carlo Tree Search in similar applications effectively.
 
 ## References
 - Chan, L. H. (2022, June 9). Playing 2048 with Deep Q-Learning (With Pytorch implementation). Medium. https://medium.com/@qwert12500/playing-2048-with-deep-q-learning-with-pytorch-implementation-4313291efe61
