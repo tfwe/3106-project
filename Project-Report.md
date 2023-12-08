@@ -4,7 +4,7 @@
 - Carlo Flores - 101156348
 - Michael Macdougall - 101197828
 
-## Statement of contributions
+## Statement of Contributions
 - Both Carlo and Michael made significant contributions
 - Both Carlo and Michael made approximately equal contributions
 - Carlo made contributions to the implementation of the game 2048 as well as the implementation of Monte Carlo trees, DQN and the Project Report. Michael made contributions to the implementation of DQN as well as the Project Report.
@@ -79,7 +79,7 @@ Upon testing our implementations against each other, we found that while the Q-L
 [<img src="./Data/random_1000_min_tile.png" width="400" />](./Data/random_1000_min_tile.png)
 [<img src="./Data/random_1000_tile_dist.png" width="400" />](./Data/random_1000_tile_dist.png)
 
-Our random sample games show us that on average, each game lasts 62 turns when using a random move policy. The longest game played lasted for 154 turns, and the maximum-valued tile reached was 64. 
+Our random sample games show us that on average, each game lasts 61 turns when using a random move policy. The longest game played lasted for 177 turns, and the maximum-valued tile reached was 64. 
 
 #### 1000 DQN Sample Games:
 [<img src="./Data/qnn_1000_num_turns.png" width="400" />](./Data/qnn_1000_num_turns.png)
@@ -87,7 +87,7 @@ Our random sample games show us that on average, each game lasts 62 turns when u
 [<img src="./Data/qnn_1000_min_tile.png" width="400" />](./Data/qnn_1000_min_tile.png)
 [<img src="./Data/qnn_1000_tile_dist.png" width="400" />](./Data/qnn_1000_tile_dist.png)
 
-Our DQN sample games show us a result that is akin to random play. We found that using our model also averaged 62 turns and the longest game lasted for 157 turns, which is similar to that of the random policy test. The maximum valued tile our model reached was 32.
+Our DQN sample games show us a result that is akin to random play. We found that using our model also averaged 62 turns and the longest game lasted for 157 turns, which is similar to that of the random policy test. The maximum valued tile our model reached was also 64. Something else that is worth noting is that the standard deviation of each distribution is very close to that of the random policy. 
 
 #### 1000 MCTS Sample Games:
 [<img src="./Data/mcts_1000_num_turns.png" width="400" />](./Data/mcts_1000_num_turns.png)
@@ -95,7 +95,7 @@ Our DQN sample games show us a result that is akin to random play. We found that
 [<img src="./Data/mcts_1000_min_tile.png" width="400" />](./Data/mcts_1000_min_tile.png)
 [<img src="./Data/mcts_1000_tile_dist.png" width="400" />](./Data/mcts_1000_tile_dist.png)
 
-Monte Carlo Tree Search by far outperformed our Deep Q-Learning neural network and the random move policy in both the maximum tile reached on average, as well as the number of turns played on average before the game ends. 
+Monte Carlo Tree Search by far outperformed our Deep Q-Learning neural network and the random move policy in both the maximum tile reached on average, as well as the number of turns played on average before the game ends. We found that the average MCTS game lasted for 153 turns, which is close to the maximum turn count for both the QNN and random policy games. The maximum valued tile reached was 256, which had never previously been reached by our other policies. Although we see better results on average, the standard deviation of each distribution shows us that the MCTS agent is less consistent than the other policies in terms of performance. This could be due to the exploration vs exploitation trade off disregarding paths that may be more optimal in the future rather than short term, and because of the random nature of 2048, especially with a 3x3 grid where losses are much easier to come across.
 
 
 ## Discussion
