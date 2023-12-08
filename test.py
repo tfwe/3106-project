@@ -296,16 +296,20 @@ def csv_to_arrays(csv_file):
     return turns_random, max_tiles_random, min_tiles_random, piece_distributions_random
 
 def main():
+    
     if len(sys.argv) > 1:
         n = int(sys.argv[1])
     else:
         n = 1
+    directory_path = './Results'
 
+    if not os.path.exists(directory_path):
+        os.makedirs(directory_path)
     print(f"Running random, QNN, and MCTS policies on {n} games...")
     print(f"\nTesting random on {n} runs...")
 
-    # turns_random, max_tiles_random, min_tiles_random, piece_distributions_random = sample_random_games(n)
     # turns_random, max_tiles_random, min_tiles_random, piece_distributions_random = csv_to_arrays("./Data/random_1000_data.csv")
+    turns_random, max_tiles_random, min_tiles_random, piece_distributions_random = sample_random_games(n)
     df_random = pd.DataFrame({
         'turns': turns_random,
         'max_tiles': max_tiles_random,
