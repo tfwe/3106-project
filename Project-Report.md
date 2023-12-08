@@ -7,7 +7,7 @@
 ## Statement of contributions
 - Both Carlo and Michael made significant contributions
 - Both Carlo and Michael made approximately equal contributions
-- Carlo made contributions to the implementation of the game 2048 as well as the implementation of Monte Carlo trees and DQN. Michael made contributions to the implementation of DQN as well as the Project Report.
+- Carlo made contributions to the implementation of the game 2048 as well as the implementation of Monte Carlo trees, DQN and the Project Report . Michael made contributions to the implementation of DQN as well as the Project Report.
 
 ## Introduction
 ### Background and Motivation for the Project
