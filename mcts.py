@@ -7,7 +7,7 @@ import time
 import sys
 from multiprocessing import Pool
 MAX_DEPTH = 7
-MAX_ITERATIONS = 2
+MAX_ITERATIONS = 3
 MAX_EXPANDED_NODES = 35
 
 class Node(object):
@@ -196,12 +196,12 @@ def pick_best_move(board, weights=np.ones(7)):
     # print(f'initializing tree with root node {node}...')
     leaf_nodes = expansion(node, board)
     selected_node = None
-    count = 0
-    while len(leaf_nodes) >= 1:
-        count += 1
-        if count >= MAX_ITERATIONS:
-            break
-    # for _ in range(MAX_ITERATIONS): # num iterations per turn 
+    # count = 0
+    # while len(leaf_nodes) >= 1:
+    #     count += 1
+    #     if count >= MAX_ITERATIONS:
+    #         break
+    for _ in range(MAX_ITERATIONS): # num iterations per turn 
         # print(f'exploring {len(leaf_nodes)} nodes...')
         simulated_nodes = [] 
         with Pool() as pool:
@@ -259,7 +259,7 @@ def main():
             if move:
                 board.move(move)
             # print(move)
-            # print(board)
+            print(board)
         print(board)
     print("win!!!!")
 
