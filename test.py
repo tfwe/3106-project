@@ -224,7 +224,7 @@ def main():
     epsilon_end, epsilon_decay, q_net, device, batch_size = init_network()
     print(f"Testing QNN on {n} runs...")
     turns_qnn, max_tiles_qnn, min_tiles_qnn, piece_distributions_qnn = sample_network_games(n, epsilon_end, epsilon_decay, q_net, device, batch_size)
-    print("Qnn test complete")
+    print("QNN test complete")
     visualize_data(turns_qnn, max_tiles_qnn, min_tiles_qnn, piece_distributions_qnn, f"./Results/qnn_{n}")
 
     print(f"\nTesting MCTS...")
