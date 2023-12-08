@@ -47,21 +47,22 @@ The data extracted will be saved the the `./Results` folder, which will include 
 We tested 3 different policies on 2048 to interpret and evaluate performance. To validate our results, we sampled 1000 games under a random move policy, and extracted the distribution of maximum value tiles, the number of turns, and the distribution of different values pieces as each game progressed. We used each of these inferences as our ground truths, and used them to compare the results we obtained from our DQN and MCTS policies. For visual simplicity, we are using the base 2 logarithm of each piece's respective value to represent it. 
 
 ### Random Sample Games:
-![random_1000_num_turns](./Data/random_1000_num_turns.png)
 [<img src="./Data/random_1000_num_turns.png" width="400" />](./Data/random_1000_num_turns.png)
-<img src="./Data/random_1000_num_turns.png" width="400" />
-![random_1000_max_tile](./Data/random_1000_max_tile.png)
-![random_1000_tile_dist](./Data/random_1000_tile_dist.png)
+[<img src="./Data/random_1000_max_tile.png" width="400" />](./Data/random_1000_max_tile.png)
+[<img src="./Data/random_1000_min_tile.png" width="400" />](./Data/random_1000_min_tile.png)
+[<img src="./Data/random_1000_tile_dist.png" width="400" />](./Data/random_1000_tile_dist.png)
 
 ### DQN Sample Games:
-![qnn_1000_num_turns](./Data/qnn_1000_num_turns.png)
-![qnn_1000_max_tile](./Data/qnn_1000_max_tile.png)
-![qnn_1000_tile_dist](./Data/qnn_1000_tile_dist.png)
+[<img src="./Data/qnn_1000_num_turns.png" width="400" />](./Data/qnn_1000_num_turns.png)
+[<img src="./Data/qnn_1000_max_tile.png" width="400" />](./Data/qnn_1000_max_tile.png)
+[<img src="./Data/qnn_1000_min_tile.png" width="400" />](./Data/qnn_1000_min_tile.png)
+[<img src="./Data/qnn_1000_tile_dist.png" width="400" />](./Data/qnn_1000_tile_dist.png)
 
 ### MCTS Sample Games:
-![mcts_1000_num_turns](./Data/mcts_1000_num_turns.png)
-![mcts_1000_max_tile](./Data/mcts_1000_max_tile.png)
-![mcts_1000_tile_dist](./Data/mcts_1000_tile_dist.png)
+[<img src="./Data/mcts_1000_num_turns.png" width="400" />](./Data/mcts_1000_num_turns.png)
+[<img src="./Data/mcts_1000_max_tile.png" width="400" />](./Data/mcts_1000_max_tile.png)
+[<img src="./Data/mcts_1000_min_tile.png" width="400" />](./Data/mcts_1000_min_tile.png)
+[<img src="./Data/mcts_1000_tile_dist.png" width="400" />](./Data/mcts_1000_tile_dist.png)
 
 ## Discussion
 
