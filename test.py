@@ -31,19 +31,24 @@ def sample_random_games(n):
         board.start_game()
         num_pieces = {}
         while not board.is_game_over():
-            for tile in (np.ravel(board.board_array)):
+            ravelled = [log_2_neg(tile) for tile in np.ravel(board.board_array)]
+            for tile in ravelled:
                 if num_pieces.get(tile) == None:
                     num_pieces[tile] = 1
                     continue
                 num_pieces[tile] += 1
             board.random_move()
         print(f"(Random Run {i+1} / {n})\n{board}")
+        ravelled = [log_2_neg(tile) for tile in np.ravel(board.board_array)]
+        for tile in ravelled:
+            if num_pieces.get(tile) == None:
+                num_pieces[tile] = 1
+                continue
+            num_pieces[tile] += 1
         turns.append(board.turn)
-        max_tiles.append(np.max(np.ravel(board.board_array)))
-        min_tiles.append(np.min(np.ravel(board.board_array)))
-
+        max_tiles.append(max(ravelled))
+        min_tiles.append(min(ravelled))
         piece_distributions.append(num_pieces)
-    max_tiles = [int(math.log(max_tile, 2)) for max_tile in max_tiles]
     return turns, max_tiles, min_tiles, piece_distributions
 
 def sample_mcts_games(n):
@@ -56,21 +61,25 @@ def sample_mcts_games(n):
         board.start_game()
         num_pieces = {}
         while not board.is_game_over():
-            for tile in (np.ravel(board.board_array)):
+            ravelled = [log_2_neg(tile) for tile in np.ravel(board.board_array)]
+            for tile in ravelled:
                 if num_pieces.get(tile) == None:
                     num_pieces[tile] = 1
                     continue
                 num_pieces[tile] += 1
             action = pick_best_move(board)
-            # action = np.random.choice(board.get_available_moves())
             board.move(action)
         print(f"(MCTS Run {i+1} / {n})\n{board}")
+        ravelled = [log_2_neg(tile) for tile in np.ravel(board.board_array)]
+        for tile in ravelled:
+            if num_pieces.get(tile) == None:
+                num_pieces[tile] = 1
+                continue
+            num_pieces[tile] += 1
         turns.append(board.turn)
-        max_tiles.append(np.max(np.ravel(board.board_array)))
-        min_tiles.append(np.min(np.ravel(board.board_array)))
+        max_tiles.append(max(ravelled))
+        min_tiles.append(min(ravelled))
         piece_distributions.append(num_pieces)
-
-    max_tiles = [int(math.log(max_tile, 2)) for max_tile in max_tiles]
     return turns, max_tiles, min_tiles, piece_distributions
 
 def sample_network_games(n, epsilon_end, epsilon_decay, q_net, device, batch_size):
@@ -83,7 +92,8 @@ def sample_network_games(n, epsilon_end, epsilon_decay, q_net, device, batch_siz
         board.start_game()
         num_pieces = {}
         while not board.is_game_over():
-            for tile in (np.ravel(board.board_array)):
+            ravelled = [log_2_neg(tile) for tile in np.ravel(board.board_array)]
+            for tile in ravelled:
                 if num_pieces.get(tile) == None:
                     num_pieces[tile] = 1
                     continue
@@ -93,11 +103,16 @@ def sample_network_games(n, epsilon_end, epsilon_decay, q_net, device, batch_siz
             total_possible_actions = ["up","down","left","right"]
             board.move(total_possible_actions[action])
         print(f"(QNN Run {i+1} / {n})\n{board}")
+        ravelled = [log_2_neg(tile) for tile in np.ravel(board.board_array)]
+        for tile in ravelled:
+            if num_pieces.get(tile) == None:
+                num_pieces[tile] = 1
+                continue
+            num_pieces[tile] += 1
         turns.append(board.turn)
-        max_tiles.append(np.max(np.ravel(board.board_array)))
-        min_tiles.append(np.min(np.ravel(board.board_array)))
+        max_tiles.append(max(ravelled))
+        min_tiles.append(min(ravelled))
         piece_distributions.append(num_pieces)
-        max_tiles = [int(log_2_neg(max_tile)) for max_tile in max_tiles]
     return turns, max_tiles, min_tiles, piece_distributions
 
 
@@ -255,7 +270,7 @@ def visualize_data(turns, max_tiles, min_tiles, piece_distributions, filename, p
     # Plot histogram of max tiles
     plt.figure()
     plt.hist(max_tiles)
-    plt.title(f'Max Value Tile Across All Games\nmax: {max(max_tiles)}, min: {min(max_tiles)}, mean: {round(np.mean(max_tiles), 4)}, std: {round(np.std(max_tiles), 4)}')
+    plt.title(f'{policy} - Max Value Tile Across All Games\nmax: {max(max_tiles)}, min: {min(max_tiles)}, mean: {round(np.mean(max_tiles), 4)}, std: {round(np.std(max_tiles), 4)}')
     plt.xlabel("Maximum Value Tile (log2(max_tile))")
     plt.ylabel("Number of Games")
     plt.savefig(filename + "_max_tile")
@@ -264,19 +279,19 @@ def visualize_data(turns, max_tiles, min_tiles, piece_distributions, filename, p
     plt.figure()
     min_tiles = [int(log_2_neg(min_tile)) for min_tile in min_tiles]
     plt.hist(min_tiles)
-    plt.title(f'Min Value Tile Across All Games\nmax: {max(min_tiles)}, min: {min(min_tiles)}, mean: {round(np.mean(min_tiles), 4)}, std: {round(np.std(min_tiles), 4)}')
+    plt.title(f'{policy} - Min Value Tile Across All Games\nmax: {max(min_tiles)}, min: {min(min_tiles)}, mean: {round(np.mean(min_tiles), 4)}, std: {round(np.std(min_tiles), 4)}')
     plt.xlabel("Minimum Value Tile (log2 of value with 0s and negatives representation")
     plt.ylabel("Number of Games Played")
     plt.savefig(filename + "_min_tile")
 
     # Plot bar chart of piece distributions
     plt.figure()
-    all_tiles = [log_2_neg(tile) for dist in piece_distributions for tile in dist]
+    all_tiles = [tile for dist in piece_distributions for tile in dist]
     all_counts = [count for dist in piece_distributions for count in dist.values()]
     plt.bar(all_tiles, all_counts)
     plt.xlabel("Tile Value (log2 of value with 0s and negatives representation)")
     plt.ylabel("Number of Times Counted")
-    plt.title(f'Tile Distributions Across All Games\nmax: {max(all_tiles)}, min: {min(all_tiles)}, mean: {round(np.mean(all_tiles), 4)}, std: {round(np.std(all_tiles), 4)}')
+    plt.title(f'{policy} - Tile Distributions Across All Games\nmax: {max(all_tiles)}, min: {min(all_tiles)}, mean: {round(np.mean(all_tiles), 4)}, std: {round(np.std(all_tiles), 4)}')
     plt.savefig(filename + "_tile_dist")
 
     # Show the plot
