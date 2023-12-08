@@ -16,7 +16,6 @@
 
 ### Objectives 
 
-Our objectives changed considerbly over the course of the project: 
 - Make a version of 2048 that is 3x3
 - Add Negative tiles to the game
 - Find a new scoring system that fits this altered version of 2048
@@ -36,12 +35,14 @@ Our objectives changed considerbly over the course of the project:
 
 ### Deep Q-Learning (DQN)
 
+Instead of abandoning the Q-learning method there was an alternative that can still utilizes this idea of mapping a state action pair to a value and that was deep Q-learning. This can be performed by using a neural network instead of a Q-table. It’s able to do this by feeding the neural network inputs (a board State action pair) that is processed by the neural network and output an optimal Q-value this means that we wouldn't have to store the Q values in a table making it possible to still use Q-learning to solve this problem. In Q-learning a replay buffer stores past experiences and allows the agent to learn from said random past experiences; this makes it so that the agent doesn’t find a correlation in the data and gets stuck in one path that it believes to be the best. These past experiences are taken in batches of a set size to run in parallel in order to make the training process more efficient. Due to lack of knowledge or experience with DQNs we were unable to find out what was making this method so inefficient, maybe it was improper use of the replay buffer or incorrect implementation of batches, but the results of the DQN were very similar to the results of the random sample games.
 
 
 ### Monte Carlo Tree Search (MCTS)
 
 ## Validation Strategies
-  In order to see that our implementation was effective we used retrospective validation where we took different statistics about each different method we had avialible to us and compared them against eachother
+  In order to see that our implementation was effective we used retrospective validation where we took different statistics about each different method such as the max tile, min tile, distribution of tiles and number of turns and we compared them against eachother. These statistics can be found in the results section of the report.
+  
 ## Running the Project Locally
 This project can be run by cloning or downloading the repository on GitHub (https://github.com/tfwe/3106-project/) and running the following shell commands in the root directory of the downloaded repository. 
 
@@ -84,6 +85,8 @@ We tested 3 different policies on 2048 to interpret and evaluate performance. To
 
 ## Discussion
 
+### Limitations of the work and directions for future work
+Monte Carlo Tree Search, although being the best solution that we could implement, can still be improved upon. Monte Carlo Search Trees don't utilize Gpu making it very Cpu intensive and thus can be very slow on certain machines. 
 ## References
 - Chan, L. H. (2022, June 9). Playing 2048 with Deep Q-Learning (With Pytorch implementation). Medium. https://medium.com/@qwert12500/playing-2048-with-deep-q-learning-with-pytorch-implementation-4313291efe61
 
