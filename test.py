@@ -276,7 +276,7 @@ def visualize_data(turns, max_tiles, min_tiles, piece_distributions, filename, p
     plt.bar(all_tiles, all_counts)
     plt.xlabel("Tile Value (log2 of value with 0s and negatives representation)")
     plt.ylabel("Number of Times Counted")
-    plt.title(f'Tile Distributions Across All Games')
+    plt.title(f'Tile Distributions Across All Games\nmax: {max(all_tiles)}, min: {min(all_tiles)}, mean: {round(np.mean(all_tiles), 4)}, std: {round(np.std(all_tiles), 4)}')
     plt.savefig(filename + "_tile_dist")
 
     # Show the plot
